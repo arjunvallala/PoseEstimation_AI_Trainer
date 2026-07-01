@@ -11,7 +11,7 @@ cap.set(4,960)
 PoseEstimator=Pose.PoseEstimator()
 count=0
 dire=0
-right = True
+right = False
 left = True
 while True:
     success,img=cap.read()
@@ -20,13 +20,10 @@ while True:
     # img=PoseEstimator.posedetection(img)
     lmList=PoseEstimator.findPosition(img,draw=False)
     if len(lmList)!=0:
-        img,angle1=PoseEstimator.findAngle(img,lmList[11][1:],lmList[13][1:],lmList[15][1:])
-        img,angle2=PoseEstimator.findAngle(img,lmList[12][1:],lmList[14][1:],lmList[16][1:])
-        if angle1>180:
-            angle1=360-angle1
-        if angle2>180:
-            angle2=360-angle2
         if right:
+            img,angle1=PoseEstimator.findAngle(img,lmList[11][1:],lmList[13][1:],lmList[15][1:])
+            if angle1>180:
+                angle1=360-angle1
             perRight=np.interp(angle1,(40,170),(0,100))
             barRight=np.interp(angle1,(40,170),(700,200))
             cv2.rectangle(img,(1130,200),(1170,700),(255,255,255),3)
@@ -44,6 +41,9 @@ while True:
             cv2.rectangle(img,(1180,600),(1280,740),(10,0,100),cv2.FILLED)
             cv2.putText(img,str(int(count)),(1210,700),cv2.FONT_HERSHEY_PLAIN,5,(255,255,255),5)
         if left:
+            img,angle2=PoseEstimator.findAngle(img,lmList[12][1:],lmList[14][1:],lmList[16][1:])
+            if angle2>180:
+                angle2=360-angle2
             perLeft=np.interp(angle2,(40,170),(0,100))
             barLeft=np.interp(angle2,(40,170),(700,200))
             cv2.rectangle(img,(110,200),(150,700),(255,255,255),3)
